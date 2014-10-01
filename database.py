@@ -38,13 +38,28 @@ def insert_data(values,db_name):
         cursor.execute(sql,values)
         db.commit()
 
+def delete_product(data,db_name):
+    with sqlite3.connect(db_name) as db:
+        cursor = db.cursor()
+        sql = "delete from Product where Name=?"
+        cursor.execute(sql,data)
+        db.commit()
+
 def update_product(data,db_name):
     with sqlite3.connect(db_name) as db:
         cursor = db.cursor()
         sql = "update Product set Name=?, Price=? where ProductID=?"
         cursor.execute(sql,data)
         db.commit()
+
         
+def select_product(db_name,productID):
+    with sqlite3.connect(db_name) as db:
+        cursor = db.cursor()
+        cursor.execute("select * from Product WHERE ProductID=?",(productID,))
+        product = cursor.fetchone()
+        return product
+            
     
 
 if __name__ == "__main__":
@@ -71,6 +86,15 @@ if __name__ == "__main__":
     
     newValues = ("Latte",2.45,1)
     update_product(newValues,db_name)
+
+    data = ("Espresso",)
+    delete_product(data,db_name)
+
+
     products = select_all_products(db_name)
     print(products)
+
+    product = select_product(db_name,1)
+    print(product)
+    
     
